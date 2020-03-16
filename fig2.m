@@ -1,5 +1,6 @@
 function fig2
 
+def('addpath');
 
 fsiz = [0.3526    0.5259    .3    0.2630*3];
 
