@@ -1,4 +1,4 @@
-function h = sim_DR_tree(plt_nr,plt_nc,plt_np)
+function sim_DR_tree(plt_nr,plt_nc,plt_np)
 do_plot = 1;
 
 M = run_DR;
@@ -36,12 +36,11 @@ end
 
 function M = run_DR
 N = 3; K = 2;
-[P] = core_treeing(N,K);
-c = ones(size(P,1),1);
+[T] = core_treeing(N,K);
+c = ones(size(T,1),1);
 c(8) = -.5;
 c(9) = -.5;
 
-[~,~,MNN] = core_lmdp(P,c);
-M = MNN;
+[~,~,M] = core_lrl(T,c);
 
 end

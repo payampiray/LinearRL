@@ -20,11 +20,10 @@ if ~exist(fname,'file')
     sims = struct('n',n,'error_cost',error_cost,'error_rank',error_rank,'labels',{labels}); %#ok<NASGU>
     save(fname,'-struct','sims');
 end
-sims = load(fname); %sims = fsim.sims;
+sims = load(fname);
 error_cost = sims.error_cost;
 error_rank = sims.error_rank;
 labels = sims.labels;
-nsim = size(error_cost,1);
 
 for i=1:length(labels)-1
     labels{i} = sprintf('D%d',i);
@@ -79,9 +78,9 @@ end
 function [error_cost, error_path, labels] = run_approximation(n)
 
 k = 2;
-[P, ~, xy, paths] = core_treeing(n,k);
+[T, ~, ~, paths] = core_treeing(n,k);
 
-ns = length(P);
+ns = length(T);
 
 q = rand(ns,1);
 q = 10*q;
@@ -92,18 +91,18 @@ for i=1:size(paths,1)
         costs(i,j) = q(paths(i,j));
     end
 end
-[costsorted,idx]=sort(sum(costs,2));
+[costsorted]=sort(sum(costs,2));
 
-[U] = core_lmdp(P,q);
-[cost_lmdp, path_lmdp] = core_follow_path(P,U,q,1);
+[U] = core_lrl(T,q);
+[cost_lrl] = core_follow_path(T,U,q,1);
 
 beta = 10;
 % [pi1] = core_value_iteration(P,q,beta);
 % [cost_val, path_val] = core_follow_path(P,pi1,q,1);
 
 for i=1:(n-1)
-    pi = core_valuation_tree(P,q,n,i,beta);
-    [cost_val, path_val] = core_follow_path(P,pi,q,1);
+    pi = core_valuation_tree(T,q,n,i,beta);
+    [cost_val, path_val] = core_follow_path(T,pi,q,1);
     costpar(i) = sum(cost_val);
     
     labels{i} = sprintf('Depth %d',i);    
@@ -111,7 +110,7 @@ end
 % labels{n} = sprintf('Full MB');
 
 
-cost = [costpar sum(cost_lmdp)];
+cost = [costpar sum(cost_lrl)];
 goodness = nan(size(cost));
 for i=1:length(cost)
     [j] = find(cost(i)==costsorted);

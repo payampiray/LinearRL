@@ -68,7 +68,7 @@ P(1,:) = [0 pp (1-pp)/(ns-2)*ones(1,ns-2)];
 P(2:ns,2:ns) = eye(ns-1);
 c = zeros(ns,1);
 c(2:(ns-1)) = -5;
-U1 = core_lmdp(P,c);
+U1 = core_lrl(P,c);
 
 same1 = U1(1,2)*resprate;
 diff1 = U1(1,3)*resprate;
@@ -81,7 +81,7 @@ P = zeros(ns,ns);
 P(1,:) = [0 pp (1-pp)/(ns-2)*ones(1,ns-2)];
 P(2:ns,2:ns) = eye(ns-1);
 c = zeros(ns,1);
-U2 = core_lmdp(P,c);
+U2 = core_lrl(P,c);
 
 same2 = U2(1,2)*resprate;
 diff2 = U2(1,3)*resprate;

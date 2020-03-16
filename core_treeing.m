@@ -1,6 +1,4 @@
-function [P, A, xy, paths] = core_treeing(N,K)
-% N = 3;
-% K = 2;
+function [T, A, xy, paths] = core_treeing(N,K)
 
 states = [1 1+(1:K)];
 % p{1} = zeros(1,length(states));
@@ -40,12 +38,12 @@ cs = length(levels);
 levels = [levels (n+1)*ones(1,ns-cs)];
 children = [children; nan(ns-cs,K)];
 
-P = zeros(ns,ns);
+T = zeros(ns,ns);
 for s=1: length(children)
     if ~isnan(children(s,:))
-        P(s,children(s,:)) = 1/K;     
+        T(s,children(s,:)) = 1/K;     
     else
-        P(s,s) = 1;
+        T(s,s) = 1;
     end
 end
 
@@ -63,12 +61,12 @@ for n=2:(N+1)
     x(sn) = xs;
 end
 
-A = P;
+A = T;
 A = ((A + A')>0) + 0.0;
 xy = [x y];
 
 
-terminals = find(diag(P)==1);
+terminals = find(diag(T)==1);
 paths = nan(length(terminals),N+1);
 for i=1:length(terminals)
     s = terminals(i);

@@ -45,7 +45,7 @@ end
 c(terms) = 0;
 c(terms(goal)) = -5;
 
-U = core_lmdp(P,c);
+U = core_lrl(P,c);
 
 
 [~, path] = core_follow_path(P,U,c,start);

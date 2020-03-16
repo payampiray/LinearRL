@@ -1,13 +1,5 @@
 function soft_pi = core_valuation_tree(P,q,n,depth,beta)
 
-% n = 7;
-% k = 2;
-% [P, A, xy, paths] = core_treeing(n,k);
-% smax = paths(end,1:end-1);
-% q = rand(size(P,1),1);
-% depth = 3;
-
-%-----------------------------
 if nargin<4
     depth = n;
 end
@@ -29,7 +21,6 @@ for i=n:-1:1
         if i>depth
             V(s) = q(s) + mean(V(nexts));
         else
-            p = P(s,nexts)';
             V(s) = q(s) + min(V(nexts));
         end
     end
@@ -49,5 +40,4 @@ for s=1:ns
     q = q/sum(q);
     soft_pi(s,nexts) = q;
 end
-value = -V;
 end

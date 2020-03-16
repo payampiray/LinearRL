@@ -50,11 +50,11 @@ P(4:6,4:6) = eye(3);
 lambda = 10;
 
 c1 = -[0;0;0;0;15;30]/lambda;
-[U1,~,MNN] = core_lmdp(P,c1);
+[U1,~,MNN] = core_lrl(P,c1);
 
 c2 = c1;
 c2(4) = -45/lambda;
-[U2] = core_lmdp(P,c2,MNN);
+[U2] = core_lrl(P,c2,MNN);
 
 mx = [U1(1,2:3); U2(1,2:3)];
 

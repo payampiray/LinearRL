@@ -68,12 +68,6 @@ fdir = fullfile(pipedir,'run_navigation'); makedir(fdir);
 fname = fullfile(fdir,sprintf('n%d_%s.mat',n,snsim));
 ftname= fullfile(fdir,sprintf('n%d_%s_temp.mat',n,snsim));
 
-if ~exist(fmaze,'file')
-    rng(0);
-    [id, rr, cc, ptr_left, ptr_up, ptr_right, ptr_down] = core_maze(n,n,'v'); %#ok<ASGLU>
-    save(fmaze,'id','rr','cc','ptr_left', 'ptr_up', 'ptr_right', 'ptr_down');
-end
-
 fm = load(fmaze);
 maze = [fm.rr, fm.cc, fm.ptr_left, fm.ptr_up, fm.ptr_right, fm.ptr_down];
 

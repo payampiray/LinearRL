@@ -4,7 +4,7 @@ do_plot = 1;
 [P, cost, barrierrs, cp, scp, xb, yb, TB, AA, xt, yt] = detour;
 M = (diag(exp(cost))-P)^-1;
 
-[U1] = core_lmdp(P,cost);
+[U1] = core_lrl(P,cost);
 p1 = U1(cp,scp);
 
 [U2] = blocking(P,barrierrs,M,cost);
@@ -127,7 +127,7 @@ for i=1:length(scp0)
     scp(i) = find(lij0(:,1) == scp0(i));
 end
 % terminals = find(lij0(:,1) == terminals);
-U1 = core_lmdp(P,cost);
+U1 = core_lrl(P,cost);
 
 config.add_arrow = 0;
 config.add_labels = 0;

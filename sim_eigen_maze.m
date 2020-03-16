@@ -32,13 +32,13 @@ n = 50;
 I = n;
 J = n;
 
-[P, xy] = core_griding(I,J);
-c= .1*ones(size(P,1),1);
+[T, xy] = core_griding(I,J);
+c= .1*ones(size(T,1),1);
 
-M = (diag(exp(c))-P)^-1;
+D = (diag(exp(c))-T)^-1;
 
 i = max(eignums);
-[U,~] = eigs(M,i);
+[U,~] = eigs(D,i);
 idx = sub2ind([n n],xy(:,1),xy(:,2));
 
 A = cell(1,length(eignums));

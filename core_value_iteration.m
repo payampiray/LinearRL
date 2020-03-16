@@ -1,13 +1,9 @@
-function [policy, value, pi] = core_value_iteration(P,q,beta,gamma)
+function [policy, value, pii] = core_value_iteration(P,q,beta)
 if nargin<3
     beta = 1;
 end
-if nargin<3
-    gamma = 1;
-end
 
 ns = size(P,1);
-n = sqrt(ns);
 
 availables = P>0;
 terminals = diag(P)==1;
@@ -22,13 +18,13 @@ while dv > tolv
     for s=snt
         nexts = (availables(s,:));
         p = P(s,nexts)';
-        V(s) = q(s) + gamma*min(V(nexts));
+        V(s) = q(s) + min(V(nexts));
     end
     dv = max(abs(V-Vpre));
-    dvv(i) = dv;
+%     dvv(i) = dv;
 end
 
-pi = zeros(ns,ns);
+pii = zeros(ns,ns);
 policy = zeros(ns,ns);
 for s=1:ns
     nexts = find(availables(s,:));
@@ -39,7 +35,7 @@ for s=1:ns
     v = p.*V(nexts);
     q = exp( -beta*v);
     q = q/sum(q);
-    pi(s,nexts) = q;
+    pii(s,nexts) = q;
 end
 value = -V;
 

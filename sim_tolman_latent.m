@@ -32,7 +32,6 @@ cols = cols([3 2 1],:);
 h(1) = subplot(plt_nr,plt_nc,plt_np(1));
 imagesc(TB,'AlphaData',AA);
 set(gca,'box','on','ytick',[],'xtick',[]);
-% title('Toman maze');
 
 h(2) = subplot(plt_nr,plt_nc,plt_np(2));
 errorbarKxN(mx_tll',0*mx_tll',tll_labels,struct('colmap',cols,'barwidth',bw));
@@ -58,7 +57,7 @@ cp = 37;
 
 [lij0, P, c] = make_blocks(lij,P0,c0,blocked,terminals,reward);
 cp = find(lij0(:,1) == cp);
-U1 = core_lmdp(P,c);
+U1 = core_lrl(P,c);
 
 config.add_arrow = 0;
 config.add_labels = 0;
@@ -88,29 +87,28 @@ pcp1 = pcp1(pcp1>0);
 
 reward(1) = -reward(1);
 c(diag(P)==1) = reward;
-U2 = core_lmdp(P,c);
+U2 = core_lrl(P,c);
 pcp2 = U2(cp,:);
 pcp2 = pcp2(pcp2>0);
 
 mx = [pcp1([1 3]); pcp2([1 3])];
-% tll_labels = {'before','after'};
 tll_labels = {'Learning','Test'};
 end
 
-function [lij, P, c] = make_blocks(lij,P,c,blocked,terminals,goal)
-ns = size(P,1);
+function [lij, T, c] = make_blocks(lij,T,c,blocked,terminals,goal)
+ns = size(T,1);
 c = c*ones(ns,1);
 c(terminals) = goal;
 
 for i=1:length(terminals)
-    P(terminals(i),:) = 0; P(terminals(i),terminals(i)) = 1;
+    T(terminals(i),:) = 0; T(terminals(i),terminals(i)) = 1;
 end
 
-P(blocked,:) = [];
-P(:,blocked) = [];
-A = (P>0)+0.0;
-D = diag(sum(A,2));
-P = D^-1*A;
+T(blocked,:) = [];
+T(:,blocked) = [];
+A = (T>0)+0.0;
+d = diag(sum(A,2));
+T = d^-1*A;
 c(blocked) = [];
 lij(blocked,:) = [];
 
