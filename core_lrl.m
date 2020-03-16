@@ -1,7 +1,7 @@
 function [pii, expv, M] = core_lrl(T,c,M)
 % implenetation of the linear RL model
 % 
-% [pii, expv, M] = core_lrl(T,r)
+% [pii, expv, M] = core_lrl(T,c)
 % T is the transition probability under the default policy
 % c is the cost vector (i.e. negative reward) across all states
 % pii is the optimized decision policy
