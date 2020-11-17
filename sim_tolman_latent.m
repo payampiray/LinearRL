@@ -63,7 +63,7 @@ config.add_arrow = 0;
 config.add_labels = 0;
 
 figure;
-[TB, AA] = plot_grids(U1,config,I,J,[],[],U1,lij0); close;
+[TB, AA] = plot_grids(U1,config,I,J,[],[],lij0); close;
 
 TB2 = nan([size(TB),3]);
 TB2(:,:,1) = TB;

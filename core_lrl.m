@@ -1,4 +1,4 @@
-function [pii, expv, M] = core_lrl(T,c,M)
+function [pii, expv, M] = core_lrl(T,c,M,lambda)
 % implenetation of the linear RL model
 % 
 % [pii, expv, M] = core_lrl(T,c)
@@ -15,6 +15,10 @@ function [pii, expv, M] = core_lrl(T,c,M)
 % making, grid fields and cognitive control", biorxiv.
 % ------------------------
 
+% lambda
+if nargin<4, lambda = 1; end
+
+
 % reward vector across all states
 r = -c;
 
@@ -22,8 +26,10 @@ r = -c;
 terminals = diag(T)==1;
 
 % computing M (if not given)
-if nargin<3
-    L = diag(exp(c)) - T;
+M_not_given = nargin<3;
+if (nargin>2) && (isempty(M)), M_not_given = 1; end
+if M_not_given
+    L = diag(exp(c/lambda)) - T;
     L(terminals,:) = [];
     L(:,terminals) = [];
     M = (L^-1);
@@ -31,12 +37,12 @@ end
 
 % P = T_{NT}
 P = T(~terminals,terminals);
-expr = exp(r(terminals));
+expr = exp(r(terminals)/lambda);
 
 expv_N = M*P*expr;
 expv = zeros(size(r));
 expv(~terminals) = expv_N;
-expv(terminals) = exp(r(terminals));
+expv(terminals) = exp(r(terminals)/lambda);
 
 % A matrix formulation of equation 6 of manuscript
 G = T*expv;
