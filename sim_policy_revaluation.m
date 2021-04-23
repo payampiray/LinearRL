@@ -27,7 +27,7 @@ ysA = def('ysA');
 abc = def('abc');
 bw  = .15;
 cols = def('col');
-cols = cols([3 2 1],:);
+cols = cols([2 3 1],:);
 
 subplot(plt_nr,plt_nc,plt_np);
 h = errorbarKxN(mx',0*mx',labels,struct('colmap',cols,'barwidth',bw));
@@ -58,6 +58,6 @@ c2(4) = -45/lambda;
 
 mx = [U1(1,2:3); U2(1,2:3)];
 
-labels = {'Learning','Test'};
+labels = {'Training','Test'};
 leglabels = {'2','3'};
 end

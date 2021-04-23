@@ -120,32 +120,27 @@ blocked = [1 2 8 9 73 74 80 81 blocked];
 [P0, ~, lij] = core_griding(I,J);
 % plot_grids(P0,[],I,J); close;
 
-[lij0, P, cost] = make_blocks(lij,P0,c0,blocked,terminals,reward);
+[lij0, P, cost] = core_make_blocks(lij,P0,c0,blocked,terminals,reward);
 cp = find(lij0(:,1) == cp);
 scp = nan(size(scp0));
 for i=1:length(scp0)
     scp(i) = find(lij0(:,1) == scp0(i));
 end
-% terminals = find(lij0(:,1) == terminals);
 U1 = core_lrl(P,cost);
 
 config.add_arrow = 0;
 config.add_labels = 0;
+col = [.2 .4 1];
 
 figure;
 [TB, AA] = plot_grids(U1,config,I,J,[],[],lij0); close;
 
 TB2 = nan([size(TB),3]);
-TB2(:,:,1) = TB;
-% TB2(:,:,2) = TB*.3;
-% TB2(:,:,3) = TB*.3;
-aa = (TB==0).*(AA==.5); aa = aa==1;
+TB2(:,:,3) = TB;
 
 [it,jt] = ind2sub([I,J],terminals);
 [ib,jb] = ind2sub([I,J],barriers0);
 
-cols = def('col');
-col  = cols(3,:);
 
 alf = .8;
 TB2(it(1),jt(1),:) =  col;
@@ -161,25 +156,5 @@ barriers = nan(size(barriers0));
 for i=1:length(barriers0)
     barriers(i) = find(lij0(:,1) == barriers0(i));
 end
-
-end
-
-function [lij, P, c] = make_blocks(lij,P,c,blocked,terminals,goal)
-ns = size(P,1);
-c = c*ones(ns,1);
-c(terminals) = goal;
-
-for i=1:length(terminals)
-    P(terminals(i),:) = 0; P(terminals(i),terminals(i)) = 1;
-end
-
-P(blocked,:) = [];
-P(:,blocked) = [];
-A = (P>0)+0.0;
-D = diag(sum(A,2));
-P = D^-1*A;
-c(blocked) = [];
-lij(blocked,:) = [];
-
 
 end

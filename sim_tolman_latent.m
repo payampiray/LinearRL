@@ -1,12 +1,9 @@
 function h = sim_tolman_latent(plt_nr,plt_nc,plt_np)
 do_plot = 1;
 
-[mx_tll, tll_labels, TB, AA] = run_tolman_latent;
+[mx_tll, tll_labels, TB, AA, cols, alf] = run_tolman_latent;
 
 
-if ~do_plot
-    return;
-end
 %--------------------------------------------------------------------------
 if nargin<1
     close all;    
@@ -27,17 +24,18 @@ ysA = def('ysA');
 abc = def('abc');
 bw  = .15;
 cols = def('col');
-cols = cols([3 2 1],:);
+cols = cols([2 3 1],:);
 
 h(1) = subplot(plt_nr,plt_nc,plt_np(1));
 imagesc(TB,'AlphaData',AA);
 set(gca,'box','on','ytick',[],'xtick',[]);
+% title('Toman maze');
 
 h(2) = subplot(plt_nr,plt_nc,plt_np(2));
 errorbarKxN(mx_tll',0*mx_tll',tll_labels,struct('colmap',cols,'barwidth',bw));
 alpha(alf);
 ylabel('Probability','fontsize',fsy);
-legend(tll_labels,'fontsize',fsy,'location','north','box','off');
+% % % legend(tll_labels,'fontsize',fsy,'location','north','box','off');
 hax=get(gca,'XAxis');
 set(hax,'fontsize',fsy);
 
@@ -92,23 +90,23 @@ pcp2 = U2(cp,:);
 pcp2 = pcp2(pcp2>0);
 
 mx = [pcp1([1 3]); pcp2([1 3])];
-tll_labels = {'Learning','Test'};
+tll_labels = {'Training','Test'};
 end
 
-function [lij, T, c] = make_blocks(lij,T,c,blocked,terminals,goal)
-ns = size(T,1);
+function [lij, P, c] = make_blocks(lij,P,c,blocked,terminals,goal)
+ns = size(P,1);
 c = c*ones(ns,1);
 c(terminals) = goal;
 
 for i=1:length(terminals)
-    T(terminals(i),:) = 0; T(terminals(i),terminals(i)) = 1;
+    P(terminals(i),:) = 0; P(terminals(i),terminals(i)) = 1;
 end
 
-T(blocked,:) = [];
-T(:,blocked) = [];
-A = (T>0)+0.0;
-d = diag(sum(A,2));
-T = d^-1*A;
+P(blocked,:) = [];
+P(:,blocked) = [];
+A = (P>0)+0.0;
+D = diag(sum(A,2));
+P = D^-1*A;
 c(blocked) = [];
 lij(blocked,:) = [];
 
