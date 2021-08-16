@@ -1,7 +1,7 @@
 function h = sim_approx_tree(plt_nr,plt_nc,plt_np)
 do_plot = 1;
 
-[P, ~, xy, paths] = core_treeing(7,2);
+[P, ~, xy, paths] = core_treeing(7,2); %#ok<ASGLU>
 
 n = 7;
 pipedir = def('pipedir');
@@ -35,10 +35,9 @@ mrank = mean(error_rank);
 ecost = serr(error_cost);
 erank = serr(error_rank);
 
+x1 = error_cost;
 mx1 = mcost;
-mx2 = mrank;
 ex1 = ecost;
-ex2 = erank;
 
 if ~do_plot
     return;
@@ -54,20 +53,13 @@ if nargin<1
     figure; set(gcf,'units','normalized'); set(gcf,'position',fsiz);
 end
 %----------------------
-fs = def('fs');
-fn = def('fn');
 fsy = def('fsy');
 alf = def('alf');
-fsA = def('fsA');
-xsA = -.05 + def('xsA');
-ysA = def('ysA');
-abc = def('abc');
-bw  = .3;
-cols = def('col'); cols(1,:) = [];
-col  = [.5 .5 .5];
 
 h(1) = subplot(plt_nr,plt_nc,plt_np(1));
-errorbarKxN(mx1,ex1,labels,struct('colmap',col,'barwidth',bw));
+raincloud1xN(x1,mx1,ex1,labels);
+ylim([0,12]);
+
 ylabel('Cost','fontsize',fsy);
 xlabel('Models','fontsize',fsy);
 alpha(alf);
@@ -97,18 +89,15 @@ end
 [cost_lrl] = core_follow_path(T,U,q,1);
 
 beta = 10;
-% [pi1] = core_value_iteration(P,q,beta);
-% [cost_val, path_val] = core_follow_path(P,pi1,q,1);
-
+costpar = nan(1,n-1);
+labels = cell(1,n-1);
 for i=1:(n-1)
     pi = core_valuation_tree(T,q,n,i,beta);
-    [cost_val, path_val] = core_follow_path(T,pi,q,1);
+    [cost_val, ~] = core_follow_path(T,pi,q,1);
     costpar(i) = sum(cost_val);
     
     labels{i} = sprintf('Depth %d',i);    
 end
-% labels{n} = sprintf('Full MB');
-
 
 cost = [costpar sum(cost_lrl)];
 goodness = nan(size(cost));

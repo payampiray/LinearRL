@@ -29,6 +29,7 @@ abc = def('abc');
 bw  = .15;
 cols = def('col');
 cols = cols([3 2 1],:);
+gcol = [1 1 1]*.5;
 
 % config = struct('pos0',.3,'arrow_shift0',.3,'arrow_length0',.6,'colmap','summer','alpha',.4,'col_terminal',[.2 .4 1],'colorful',0);
 config = struct('pos0',.3,'arrow_shift0',.3,'arrow_length0',.6,'colmap','summer','alpha',.4,'col_terminal',[.2 .4 1],'colorful',1);
@@ -45,16 +46,24 @@ config.col_terminal = cols(1,:);
 h(2)=subplot(plt_nr,plt_nc,plt_np(2));
 plot_grids(U1_trained,config,siz,siz,[],[],lij0); %close;
 
+thresh = 0.005;
+[x1,y1] = make_hist(paths1,thresh);
+[x2,y2] = make_hist(paths2,thresh);
+
 mx1 = mean(paths1);
 ex1 = serr(paths1);
 mx2 = mean(paths2);
 ex2 = serr(paths2);
-bv1 = minpath1;
-bv2 = minpath2;
+bv1 = minpath1-1;
+bv2 = minpath2-1;
 labels = {'no training','over-trained'};
 
 h(3) = subplot(plt_nr,plt_nc,plt_np(3));
-errorbarKxN(mx1,ex1,labels,struct('barwidth',bw,'colmap',cols,'basevalue',bv1));
+hist_errorbarKxN(x1,y1,mx1,ex1,labels,struct('barwidth',bw,'colmap',gcol,'basevalue',bv1,'hist_dist',.5,'hist_scale',2));
+
+set(h(3),'ytick',(bv1+1):4:max(x1));
+ylim([bv1, max(x1)+1]);
+
 alpha(gca,alf);
 set(h,'fontname',fn);
 ylabel('Number of steps','fontsize',fsy);
@@ -74,7 +83,11 @@ plot_grids(U2_trained,config,siz,siz,[],[],lij0); %close;
 title('over-trained','fontsize',fsy);
 
 h(6) = subplot(plt_nr,plt_nc,plt_np(6));
-errorbarKxN(mx2,ex2,labels,struct('barwidth',bw,'colmap',cols,'basevalue',bv2));
+hist_errorbarKxN(x2,y2,mx2,ex2,labels,struct('barwidth',bw,'colmap',gcol,'basevalue',bv2,'hist_dist',.5,'hist_scale',2));
+
+set(h(6),'ytick',(bv1+1):4:max(x2));
+ylim([bv2, max(x2)+1]);
+
 alpha(gca,alf);
 set(h(6),'fontname',fn);
 ylabel('Number of steps','fontsize',fsy);
@@ -83,10 +96,31 @@ set(hax,'fontsize',fsy);
 title('Different room training','fontsize',fsy);
 
 
-
 % % for i= 1:length(h)
 % %     text(xsA,ysA,abc(i),'fontsize',fsA,'Unit','normalized','fontname',fn,'parent',h(i));
 % % end
+end
+
+function [u,y] = make_hist(x,thresh)
+% thresh = 0.01;
+u = unique(x(:));
+n = length(u);
+
+y = nan(n,size(x,2));
+for i=1:size(x,2)
+    z = nan(n,1);
+    for j=1:n
+        z(j) = mean(x(:,i)==u(j));
+    end
+    z(z<thresh) = 0;
+    y(:,i) = z;
+end
+
+sy = sum(y,2);
+u(sy==0) = [];
+y(sy==0,:) = [];
+% y = y./sum(y,1);
+
 end
 
 function [siz,P0,lij0,U1_trained,U2_no_train,U2_trained,paths1,paths2,minpath1,minpath2,path2_no_train,path2_trained] = habit_problem

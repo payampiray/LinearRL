@@ -31,7 +31,7 @@ cols = cols([3 2 1],:);
 
 for i= 1:length(h)
     set(h((i)),'fontsize',fs,'fontname',fn);
-%     text(xsA,ysA,abc(i),'fontsize',fsA,'Unit','normalized','fontname',fn,'parent',h(i));
+    text(xsA,ysA,abc(i),'fontsize',fsA,'Unit','normalized','fontname',fn,'parent',h(i));
 end
 
 end

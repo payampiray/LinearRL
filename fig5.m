@@ -2,14 +2,14 @@ function fig5
 % border cells
 def('addpath');
 
-fsiz = [0.3526    0.5259    .25    0.2630*3];
+fsiz = [0.3526    0.5259    .35    0.25];
 
 close all;
 figure; set(gcf,'units','normalized'); set(gcf,'position',fsiz);
 
-nr = 4;
-nc = 2;
-h(5:8) = sim_border_cells(nr,nc,5:8);
+nr = 2;
+nc = 4;
+h(5:8) = sim_border_cells(nr,nc,[3 4 7 8]);
 
 
 for i = [1 2]
@@ -20,20 +20,15 @@ end
 h([2:4 6:8]) = [];
 
 % --------
-fs = def('fs');
 fn = def('fn');
-fsy = def('fsy');
-alf = def('alf');
 fsA = def('fsA');
-xsA = -.05 + def('xsA');
 ysA = def('ysA');
 abc = def('abc');
-bw  = .15;
 cols = def('col');
-cols = cols([3 2 1],:);
 
+xsA = [-.7 -0.2];
 for i= 1:length(h)
-    text(xsA,ysA,abc(i),'fontsize',fsA,'Unit','normalized','fontname',fn,'parent',h(i));
+    text(xsA(i),ysA,abc(i),'fontsize',fsA,'Unit','normalized','fontname',fn,'parent',h(i));
 end
 
 end

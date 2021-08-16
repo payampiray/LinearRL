@@ -1,12 +1,13 @@
 function fig6
 
-fsiz = [0.3526    0.5259    .35    0.45];
+% fsiz = [0.3526    0.5259    .35    0.45];
+fsiz = [0.3526    0.5259    .55    0.2];
 
 close all;
 figure; set(gcf,'units','normalized'); set(gcf,'position',fsiz);
 
-nr = 2;
-nc = 2;
+nr = 1;
+nc = 3;
 
 h(2) = sim_2step(nr,nc,2);
 
@@ -22,7 +23,7 @@ fsy = def('fsy');
 alf = def('alf');
 fsA = def('fsA');
 xsA = -.05 + def('xsA');
-ysA = def('ysA');
+ysA = 1.03;def('ysA');
 abc = def('abc');
 bw  = .15;
 cols = def('col');
